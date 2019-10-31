@@ -48,9 +48,9 @@ func TestTweetWithoutUserIsNotPublished(t *testing.T) {
 }
 
 func TestTweetWithoutTextIsNotPublished(t *testing.T) {
-
+	// TO-DO
 }
 
 func TestTweetWichEwxceeding140CharactersIsNotPublished(t *testing.T) {
-
+	// TO-DO
 }
