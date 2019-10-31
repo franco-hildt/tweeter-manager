@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/service"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPublishedTweetIsSaved(t *testing.T) {
@@ -11,7 +12,5 @@ func TestPublishedTweetIsSaved(t *testing.T) {
 
 	service.PublishTweet(tweet)
 
-	if service.GetTweet() != tweet {
-		t.Error("Expected tweet is", tweet)
-	}
+	assert.Equal(t, tweet, service.GetTweet(), "They should be equal")
 }
