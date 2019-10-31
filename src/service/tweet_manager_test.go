@@ -44,7 +44,7 @@ func TestTweetWithoutUserIsNotPublished(t *testing.T) {
 
 	// Validation
 	assert.NotNil(t, err, "Should be nil")
-	assert.Equal(t, "user is required", err.Error(), "Should be nil")
+	assert.Equal(t, "user is required", err.Error(), "Should be user is required")
 }
 
 func TestTweetWithoutTextIsNotPublished(t *testing.T) {
