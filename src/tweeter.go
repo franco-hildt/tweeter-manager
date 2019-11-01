@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/abiosoft/ishell"
+	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/domain"
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/service"
 )
 
@@ -20,7 +21,8 @@ func main() {
 
 			c.Print("Write your tweet: ")
 
-			tweet := c.ReadLine()
+			text := c.ReadLine()
+			tweet := domain.NewTweet("fhildt", text)
 
 			service.PublishTweet(tweet)
 
@@ -31,15 +33,33 @@ func main() {
 	})
 
 	shell.AddCmd(&ishell.Cmd{
-		Name: "showTweet",
-		Help: "Shows a tweet",
+		Name: "showLastTweet",
+		Help: "Shows the last tweet",
 		Func: func(c *ishell.Context) {
 
 			defer c.ShowPrompt(true)
 
-			tweet := service.GetTweet()
+			tweet := service.GetLastTweet()
 
-			c.Println(tweet)
+			printTweet(tweet, c)
+
+			return
+		},
+	})
+
+	shell.AddCmd(&ishell.Cmd{
+		Name: "showTweets",
+		Help: "Shows all the tweets",
+		Func: func(c *ishell.Context) {
+
+			defer c.ShowPrompt(true)
+
+			tweet := service.GetTweets()
+
+			//c.Println(tweet)
+			for _, t := range tweet {
+				printTweet(t, c)
+			}
 
 			return
 		},
@@ -47,4 +67,9 @@ func main() {
 
 	shell.Run()
 
+}
+
+func printTweet(t domain.Tweet, c *ishell.Context) {
+	c.Println(t.Text)
+	c.Println("user:" + t.User + "  " + "date:" + t.Date.Format("2006-01-02 15:04:05")) //"2006-01-02 15:04:05"
 }
