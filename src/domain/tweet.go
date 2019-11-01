@@ -15,3 +15,7 @@ func NewTweet(user string, text string) *Tweet {
 
 	return &tweet
 }
+
+func (this *Tweet) PrintableTweet() string {
+	return "@" + this.User + ": " + this.Text
+}
