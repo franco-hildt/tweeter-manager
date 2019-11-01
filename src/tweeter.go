@@ -13,6 +13,7 @@ func main() {
 	shell := ishell.New()
 	shell.SetPrompt("Tweeter >> ")
 	shell.Print("Type 'help' to know commands\n")
+	service.InitializeService()
 
 	shell.AddCmd(&ishell.Cmd{
 		Name: "publishTweet",
