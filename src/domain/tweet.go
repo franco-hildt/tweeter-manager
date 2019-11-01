@@ -6,11 +6,12 @@ type Tweet struct {
 	Text string
 	User string
 	Date *time.Time
+	Id   int
 }
 
 func NewTweet(user string, text string) *Tweet {
 	p := time.Now()
-	tweet := Tweet{text, user, &p}
+	tweet := Tweet{text, user, &p, 0}
 
 	return &tweet
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/abiosoft/ishell"
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/domain"
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/service"
@@ -70,6 +72,6 @@ func main() {
 }
 
 func printTweet(t domain.Tweet, c *ishell.Context) {
-	c.Println(t.Text)
+	c.Println(strconv.Itoa(t.Id) + ". " + t.Text)
 	c.Println("user:" + t.User + "  " + "date:" + t.Date.Format("2006-01-02 15:04:05")) //"2006-01-02 15:04:05"
 }
