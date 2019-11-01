@@ -12,17 +12,17 @@ import (
 func TestPublishedTweetIsSaved(t *testing.T) {
 
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
 	var tweet *domain.Tweet
 	user := "grupoesfera"
 	text := "This is my first tweet"
 	tweet = domain.NewTweet(user, text)
 
 	// Operation
-	service.PublishTweet(tweet)
+	tweetManager.PublishTweet(tweet)
 
 	// Validation
-	publishedTweet := service.GetLastTweet()
+	publishedTweet := tweetManager.GetLastTweet()
 
 	assert.Equal(t, user, publishedTweet.User, "Should be equal")
 	assert.Equal(t, text, publishedTweet.Text, "Should be equal")
@@ -32,7 +32,7 @@ func TestPublishedTweetIsSaved(t *testing.T) {
 func TestTweetWithoutUserIsNotPublished(t *testing.T) {
 
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
 	var tweet *domain.Tweet
 
 	var user string
@@ -42,16 +42,16 @@ func TestTweetWithoutUserIsNotPublished(t *testing.T) {
 
 	// Operation
 	var err error
-	_, err = service.PublishTweet(tweet)
+	_, err = tweetManager.PublishTweet(tweet)
 
 	// Validation
 	assert.NotNil(t, err, "Should be nil")
 	assert.Equal(t, "user is required", err.Error(), "Should be user is required")
 }
 
-func TestCanPublishAndRetrieveMoreThanOneTweet(t *testing.T) {
+func TestCanPublishAndRetrieveMoreThanOneTweet(t *testing.T) { //
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
 	var tweet, secondTweet *domain.Tweet // Fill the tweets with data
 	text1 := "Primer tweet"
 	text2 := "Segundo tweet"
@@ -60,11 +60,11 @@ func TestCanPublishAndRetrieveMoreThanOneTweet(t *testing.T) {
 	secondTweet = domain.NewTweet(user, text2)
 
 	// Operation
-	service.PublishTweet(tweet)
-	service.PublishTweet(secondTweet)
+	tweetManager.PublishTweet(tweet)
+	tweetManager.PublishTweet(secondTweet)
 
 	// Validation
-	publishedTweets := service.GetTweets()
+	publishedTweets := tweetManager.GetTweets()
 	assert.Equal(t, 2, len(publishedTweets), "Should be the same len")
 
 	firstPublishedTweet := publishedTweets[0]
@@ -81,7 +81,7 @@ func TestCanPublishAndRetrieveMoreThanOneTweet(t *testing.T) {
 func TestTweetWithoutTextIsNotPublished(t *testing.T) {
 
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
 	var tweet *domain.Tweet
 
 	user := "grupoesfera"
@@ -91,7 +91,7 @@ func TestTweetWithoutTextIsNotPublished(t *testing.T) {
 
 	// Operation
 	var err error
-	_, err = service.PublishTweet(tweet)
+	_, err = tweetManager.PublishTweet(tweet)
 
 	// Validation
 	assert.NotNil(t, err, "Should NOT be nil")
@@ -103,7 +103,7 @@ func TestTweetWithoutTextIsNotPublished(t *testing.T) {
 func TestTweetWhichExceeding140CharactersIsNotPublished(t *testing.T) {
 
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
 	var tweet *domain.Tweet
 
 	user := "grupoesfera"
@@ -115,17 +115,17 @@ func TestTweetWhichExceeding140CharactersIsNotPublished(t *testing.T) {
 
 	// Operation
 	var err error
-	_, err = service.PublishTweet(tweet)
+	_, err = tweetManager.PublishTweet(tweet)
 
 	// Validation
 	assert.NotNil(t, err, "Should NOT be nil")
 	assert.Equal(t, "text exceeds 140 characters", err.Error(), "Should be equal")
 }
 
-func TestCanRetrieveTweetById(t *testing.T) {
+func TestCanRetrieveTweetById(t *testing.T) { //
 
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
 
 	var tweet *domain.Tweet
 	var id int
@@ -136,10 +136,10 @@ func TestCanRetrieveTweetById(t *testing.T) {
 	tweet = domain.NewTweet(user, text)
 
 	// Operation
-	id, _ = service.PublishTweet(tweet)
+	id, _ = tweetManager.PublishTweet(tweet)
 
 	// Validation
-	publishedTweet := service.GetTweetById(id)
+	publishedTweet := tweetManager.GetTweetById(id)
 
 	assert.Equal(t, publishedTweet.Text, text, "Should be equal")
 	assert.Equal(t, publishedTweet.User, user, "Should be equal")
@@ -148,7 +148,8 @@ func TestCanRetrieveTweetById(t *testing.T) {
 
 func TestCanCountTheTweetsSentByAnUser(t *testing.T) {
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
+
 	var tweet, secondTweet, thirdTweet *domain.Tweet
 	user := "grupoesfera"
 	anotherUser := "nick"
@@ -157,11 +158,11 @@ func TestCanCountTheTweetsSentByAnUser(t *testing.T) {
 	tweet = domain.NewTweet(user, text)
 	secondTweet = domain.NewTweet(user, secondText)
 	thirdTweet = domain.NewTweet(anotherUser, text)
-	service.PublishTweet(tweet)
-	service.PublishTweet(secondTweet)
-	service.PublishTweet(thirdTweet)
+	tweetManager.PublishTweet(tweet)
+	tweetManager.PublishTweet(secondTweet)
+	tweetManager.PublishTweet(thirdTweet)
 	// Operation
-	count := service.CountTweetsByUser(user)
+	count := tweetManager.CountTweetsByUser(user)
 	// Validation
 
 	assert.Equal(t, 2, count, "Should be equal")
@@ -169,7 +170,8 @@ func TestCanCountTheTweetsSentByAnUser(t *testing.T) {
 
 func TestCanRetrieveTheTweetsSentByAnUser(t *testing.T) {
 	// Initialization
-	service.InitializeService()
+	tweetManager := service.NewTweetManager()
+
 	var tweet, secondTweet, thirdTweet *domain.Tweet
 	user := "grupoesfera"
 	anotherUser := "nick"
@@ -180,12 +182,12 @@ func TestCanRetrieveTheTweetsSentByAnUser(t *testing.T) {
 	thirdTweet = domain.NewTweet(anotherUser, text)
 
 	// publish the 3 tweets
-	service.PublishTweet(tweet)
-	service.PublishTweet(secondTweet)
-	service.PublishTweet(thirdTweet)
+	tweetManager.PublishTweet(tweet)
+	tweetManager.PublishTweet(secondTweet)
+	tweetManager.PublishTweet(thirdTweet)
 
 	// Operation
-	tweets := service.GetTweetsByUser(user)
+	tweets := tweetManager.GetTweetsByUser(user)
 
 	// Validation
 	assert.Equal(t, 2, len(tweets), "Should be equal")

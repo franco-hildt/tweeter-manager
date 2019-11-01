@@ -6,11 +6,22 @@ import (
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/domain"
 )
 
-var Tweets []domain.Tweet
-var TweetsByUser map[string][]domain.Tweet
-var lastId int = 0
+type TweetManager struct {
+	Tweets       []domain.Tweet
+	TweetsByUser map[string][]domain.Tweet
+	LastId       int
+}
 
-func PublishTweet(tweet *domain.Tweet) (int, error) {
+func NewTweetManager() TweetManager {
+	var this TweetManager
+	this.Tweets = make([]domain.Tweet, 0)
+	this.LastId = 0
+	this.TweetsByUser = make(map[string][]domain.Tweet)
+
+	return this
+}
+
+func (this *TweetManager) PublishTweet(tweet *domain.Tweet) (int, error) {
 	if tweet.User == "" {
 		return 0, fmt.Errorf("user is required")
 	} else if len(tweet.Text) > 140 {
@@ -18,34 +29,28 @@ func PublishTweet(tweet *domain.Tweet) (int, error) {
 	} else if len(tweet.Text) == 0 {
 		return 0, fmt.Errorf("text is required")
 	} else {
-		lastId++
-		tweet.Id = lastId
-		Tweets = append(Tweets, *tweet)
-		TweetsByUser[tweet.User] = append(TweetsByUser[tweet.User], *tweet)
-		return lastId, nil
+		this.LastId++
+		tweet.Id = this.LastId
+		this.Tweets = append(this.Tweets, *tweet)
+		this.TweetsByUser[tweet.User] = append(this.TweetsByUser[tweet.User], *tweet)
+		return this.LastId, nil
 	}
 }
 
-func GetTweetsByUser(user string) []domain.Tweet {
-	return TweetsByUser[user]
+func (this *TweetManager) GetTweetsByUser(user string) []domain.Tweet {
+	return this.TweetsByUser[user]
 }
 
-func GetTweets() []domain.Tweet {
-	return Tweets
+func (this *TweetManager) GetTweets() []domain.Tweet {
+	return this.Tweets
 }
 
-func GetLastTweet() domain.Tweet {
-	return Tweets[len(Tweets)-1]
+func (this *TweetManager) GetLastTweet() domain.Tweet {
+	return this.Tweets[len(this.Tweets)-1]
 }
 
-func InitializeService() {
-	Tweets = make([]domain.Tweet, 0)
-	lastId = 0
-	TweetsByUser = make(map[string][]domain.Tweet)
-}
-
-func GetTweetById(id int) *domain.Tweet {
-	for _, t := range Tweets {
+func (this *TweetManager) GetTweetById(id int) *domain.Tweet {
+	for _, t := range this.Tweets {
 		if t.Id == id {
 			return &t
 		}
@@ -53,7 +58,7 @@ func GetTweetById(id int) *domain.Tweet {
 	return nil
 }
 
-func CountTweetsByUser(user string) (cont int) {
+func (this *TweetManager) CountTweetsByUser(user string) (cont int) {
 
-	return len(TweetsByUser[user])
+	return len(this.TweetsByUser[user])
 }
