@@ -20,3 +20,21 @@ func TestCanGetAPrintableTweet(t *testing.T) {
 	expectedText := "@grupoesfera: This is my tweet"
 	assert.Equal(t, expectedText, text, "The texts should be equal")
 }
+
+func TestCanGetAStringFromATweet(t *testing.T) {
+
+	// Initialization
+	tweet := domain.NewTweet("grupoesfera", "This is my tweet")
+
+	// Operation
+	text := tweet.String()
+
+	// Validation
+	expectedText := "@grupoesfera: This is my tweet"
+
+	assert.Equal(t, text, expectedText)
+
+	// if text != expectedText {
+	//     t.Errorf("The expected text is %s but was %s", expectedText, text)
+	// }
+}

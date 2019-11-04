@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Tweet struct {
 	Text string
@@ -18,4 +21,8 @@ func NewTweet(user string, text string) *Tweet {
 
 func (this *Tweet) PrintableTweet() string {
 	return "@" + this.User + ": " + this.Text
+}
+
+func (this *Tweet) String() string {
+	return fmt.Sprintf("@%v: %v", this.User, this.Text)
 }
