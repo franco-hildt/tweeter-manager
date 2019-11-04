@@ -23,7 +23,7 @@ func main() {
 			c.Print("Write your tweet: ")
 
 			text := c.ReadLine()
-			tweet := domain.NewTweet("fhildt", text)
+			tweet := domain.NewTextTweet("fhildt", text)
 
 			tweetManager.PublishTweet(tweet)
 

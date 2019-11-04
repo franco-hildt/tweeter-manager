@@ -13,10 +13,9 @@ func TestPublishedTweetIsSaved(t *testing.T) {
 
 	// Initialization
 	tweetManager := service.NewTweetManager()
-	var tweet *domain.Tweet
 	user := "grupoesfera"
 	text := "This is my first tweet"
-	tweet = domain.NewTweet(user, text)
+	tweet := domain.NewTextTweet(user, text)
 
 	// Operation
 	tweetManager.PublishTweet(tweet)
@@ -24,21 +23,20 @@ func TestPublishedTweetIsSaved(t *testing.T) {
 	// Validation
 	publishedTweet := tweetManager.GetLastTweet()
 
-	assert.Equal(t, user, publishedTweet.User, "Should be equal")
-	assert.Equal(t, text, publishedTweet.Text, "Should be equal")
-	assert.NotNil(t, publishedTweet.Date, "Should NOT be equal")
+	assert.Equal(t, user, publishedTweet.GetUser(), "Should be equal")
+	assert.Equal(t, text, publishedTweet.GetText(), "Should be equal")
+	assert.NotNil(t, publishedTweet.GetDate(), "Should NOT be equal")
 }
 
 func TestTweetWithoutUserIsNotPublished(t *testing.T) {
 
 	// Initialization
 	tweetManager := service.NewTweetManager()
-	var tweet *domain.Tweet
 
 	var user string
 	text := "This is my first tweet"
 
-	tweet = domain.NewTweet(user, text)
+	tweet := domain.NewTextTweet(user, text)
 
 	// Operation
 	var err error
@@ -52,12 +50,12 @@ func TestTweetWithoutUserIsNotPublished(t *testing.T) {
 func TestCanPublishAndRetrieveMoreThanOneTweet(t *testing.T) { //
 	// Initialization
 	tweetManager := service.NewTweetManager()
-	var tweet, secondTweet *domain.Tweet // Fill the tweets with data
+	var tweet, secondTweet domain.Tweet // Fill the tweets with data
 	text1 := "Primer tweet"
 	text2 := "Segundo tweet"
 	user := "fhildt"
-	tweet = domain.NewTweet(user, text1)
-	secondTweet = domain.NewTweet(user, text2)
+	tweet = domain.NewTextTweet(user, text1)
+	secondTweet = domain.NewTextTweet(user, text2)
 
 	// Operation
 	tweetManager.PublishTweet(tweet)
@@ -70,11 +68,11 @@ func TestCanPublishAndRetrieveMoreThanOneTweet(t *testing.T) { //
 	firstPublishedTweet := publishedTweets[0]
 	secondPublishedTweet := publishedTweets[1]
 
-	assert.Equal(t, firstPublishedTweet.Text, text1, "Should be equal")
-	assert.Equal(t, firstPublishedTweet.User, user, "Should be equal")
+	assert.Equal(t, firstPublishedTweet.GetText(), text1, "Should be equal")
+	assert.Equal(t, firstPublishedTweet.GetUser(), user, "Should be equal")
 
-	assert.Equal(t, secondPublishedTweet.Text, text2, "Should be equal")
-	assert.Equal(t, secondPublishedTweet.User, user, "Should be equal")
+	assert.Equal(t, secondPublishedTweet.GetText(), text2, "Should be equal")
+	assert.Equal(t, secondPublishedTweet.GetUser(), user, "Should be equal")
 
 }
 
@@ -82,12 +80,12 @@ func TestTweetWithoutTextIsNotPublished(t *testing.T) {
 
 	// Initialization
 	tweetManager := service.NewTweetManager()
-	var tweet *domain.Tweet
+	var tweet domain.Tweet
 
 	user := "grupoesfera"
 	var text string
 
-	tweet = domain.NewTweet(user, text)
+	tweet = domain.NewTextTweet(user, text)
 
 	// Operation
 	var err error
@@ -104,14 +102,14 @@ func TestTweetWhichExceeding140CharactersIsNotPublished(t *testing.T) {
 
 	// Initialization
 	tweetManager := service.NewTweetManager()
-	var tweet *domain.Tweet
+	var tweet domain.Tweet
 
 	user := "grupoesfera"
 	text := `The Go project has grown considerably with over half a million users and community members 
 	all over the world. To date all community oriented activities have been organized by the community
 	with minimal involvement from the Go project. We greatly appreciate these efforts`
 
-	tweet = domain.NewTweet(user, text)
+	tweet = domain.NewTextTweet(user, text)
 
 	// Operation
 	var err error
@@ -127,13 +125,13 @@ func TestCanRetrieveTweetById(t *testing.T) { //
 	// Initialization
 	tweetManager := service.NewTweetManager()
 
-	var tweet *domain.Tweet
+	var tweet domain.Tweet
 	var id int
 
 	user := "grupoesfera"
 	text := "This is my first tweet"
 
-	tweet = domain.NewTweet(user, text)
+	tweet = domain.NewTextTweet(user, text)
 
 	// Operation
 	id, _ = tweetManager.PublishTweet(tweet)
@@ -141,23 +139,23 @@ func TestCanRetrieveTweetById(t *testing.T) { //
 	// Validation
 	publishedTweet := tweetManager.GetTweetById(id)
 
-	assert.Equal(t, publishedTweet.Text, text, "Should be equal")
-	assert.Equal(t, publishedTweet.User, user, "Should be equal")
-	assert.Equal(t, publishedTweet.Id, id, "Should be equal")
+	assert.Equal(t, publishedTweet.GetText(), text)
+	assert.Equal(t, publishedTweet.GetUser(), user, "Should be equal")
+	assert.Equal(t, publishedTweet.GetId(), id, "Should be equal")
 }
 
 func TestCanCountTheTweetsSentByAnUser(t *testing.T) {
 	// Initialization
 	tweetManager := service.NewTweetManager()
 
-	var tweet, secondTweet, thirdTweet *domain.Tweet
+	var tweet, secondTweet, thirdTweet domain.Tweet
 	user := "grupoesfera"
 	anotherUser := "nick"
 	text := "This is my first tweet"
 	secondText := "This is my second tweet"
-	tweet = domain.NewTweet(user, text)
-	secondTweet = domain.NewTweet(user, secondText)
-	thirdTweet = domain.NewTweet(anotherUser, text)
+	tweet = domain.NewTextTweet(user, text)
+	secondTweet = domain.NewTextTweet(user, secondText)
+	thirdTweet = domain.NewTextTweet(anotherUser, text)
 	tweetManager.PublishTweet(tweet)
 	tweetManager.PublishTweet(secondTweet)
 	tweetManager.PublishTweet(thirdTweet)
@@ -172,14 +170,14 @@ func TestCanRetrieveTheTweetsSentByAnUser(t *testing.T) {
 	// Initialization
 	tweetManager := service.NewTweetManager()
 
-	var tweet, secondTweet, thirdTweet *domain.Tweet
+	var tweet, secondTweet, thirdTweet domain.Tweet
 	user := "grupoesfera"
 	anotherUser := "nick"
 	text := "This is my first tweet"
 	secondText := "This is my second tweet"
-	tweet = domain.NewTweet(user, text)
-	secondTweet = domain.NewTweet(user, secondText)
-	thirdTweet = domain.NewTweet(anotherUser, text)
+	tweet = domain.NewTextTweet(user, text)
+	secondTweet = domain.NewTextTweet(user, secondText)
+	thirdTweet = domain.NewTextTweet(anotherUser, text)
 
 	// publish the 3 tweets
 	tweetManager.PublishTweet(tweet)
@@ -195,8 +193,8 @@ func TestCanRetrieveTheTweetsSentByAnUser(t *testing.T) {
 	secondPublishedTweet := tweets[1]
 	// check if isValidTweet for firstPublishedTweet and secondPublishedTweet
 
-	assert.Equal(t, firstPublishedTweet.User, user, "Should be equal")
-	assert.Equal(t, firstPublishedTweet.Text, text, "Should be equal")
-	assert.Equal(t, secondPublishedTweet.User, user, "Should be equal")
-	assert.Equal(t, secondPublishedTweet.Text, secondText, "Should be equal")
+	assert.Equal(t, firstPublishedTweet.GetUser(), user, "Should be equal")
+	assert.Equal(t, firstPublishedTweet.GetText(), text, "Should be equal")
+	assert.Equal(t, secondPublishedTweet.GetUser(), user, "Should be equal")
+	assert.Equal(t, secondPublishedTweet.GetText(), secondText, "Should be equal")
 }
