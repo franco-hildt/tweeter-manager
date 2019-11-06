@@ -31,7 +31,7 @@ func (this *TweetManager) PublishTweet(tweet domain.Tweet) (int, error) {
 		return 0, fmt.Errorf("text is required")
 	} else {
 		this.LastId++
-		tweet.SetId(this.LastId)
+		//domain.SetId(this.LastId, &tweet)
 		this.Tweets = append(this.Tweets, tweet)
 		this.TweetsByUser[tweet.GetUser()] = append(this.TweetsByUser[tweet.GetUser()], tweet)
 		return this.LastId, nil

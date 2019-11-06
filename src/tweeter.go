@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/abiosoft/ishell"
+	"github.com/franco-hildt/tweeter-manager/tweeter-manager/rest"
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/domain"
 	"github.com/franco-hildt/tweeter-manager/tweeter-manager/src/service"
 )
@@ -12,6 +13,9 @@ func main() {
 	shell.SetPrompt("Tweeter >> ")
 	shell.Print("Type 'help' to know commands\n")
 	tweetManager := service.NewTweetManager()
+
+	ginServer := rest.NewGinServer(&tweetManager)
+	ginServer.StartGinServer()
 
 	shell.AddCmd(&ishell.Cmd{
 		Name: "publishTweet",

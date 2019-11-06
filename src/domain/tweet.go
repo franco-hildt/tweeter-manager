@@ -10,7 +10,7 @@ type Tweet interface {
 	GetText() string
 	GetDate() *time.Time
 	GetId() int
-	SetId(int)
+	SetId(int, *TextTweet)
 	PrintableTweet() string
 }
 
@@ -38,27 +38,27 @@ func NewTextTweet(user string, text string) *TextTweet {
 	return &tweet
 }
 
-func (tweet *TextTweet) GetUser() string {
+func (tweet TextTweet) GetUser() string {
 	return tweet.User
 }
 
-func (tweet *TextTweet) GetText() string {
+func (tweet TextTweet) GetText() string {
 	return tweet.Text
 }
 
-func (tweet *TextTweet) GetDate() *time.Time {
+func (tweet TextTweet) GetDate() *time.Time {
 	return tweet.Date
 }
 
-func (tweet *TextTweet) GetId() int {
+func (tweet TextTweet) GetId() int {
 	return tweet.Id
 }
 
-func (tweet *TextTweet) SetId(id int) {
-	tweet.Id = id
+func (tweet TextTweet) SetId(id int, aux *TextTweet) {
+	aux.Id = id
 }
 
-func (this *TextTweet) PrintableTweet() string {
+func (this TextTweet) PrintableTweet() string {
 	return "@" + this.User + ": " + this.Text
 }
 
@@ -89,8 +89,8 @@ func (tweet *QuoteTweet) GetId() int {
 	return tweet.Id
 }
 
-func (tweet *QuoteTweet) SetId(id int) {
-	tweet.Id = id
+func (tweet *QuoteTweet) SetId(id int, aux *TextTweet) {
+	aux.Id = id
 }
 
 func (tweet *QuoteTweet) PrintableTweet() string {
@@ -124,8 +124,8 @@ func (tweet *ImageTweet) GetId() int {
 	return tweet.Id
 }
 
-func (tweet *ImageTweet) SetId(id int) {
-	tweet.Id = id
+func (tweet *ImageTweet) SetId(id int, aux *TextTweet) {
+	aux.Id = id
 }
 
 func (tweet *ImageTweet) PrintableTweet() string {
